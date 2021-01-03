@@ -1,5 +1,7 @@
 ESX = nil
 display = false
+maxLength = 100
+minLength = 30
 
 Citizen.CreateThread(function()
   while ESX == nil do
@@ -30,10 +32,14 @@ Citizen.CreateThread(function()
           local distance = #(coords - v.pos)
           if not display then
             if distance < 1.0 then
-                DrawText3D(v.pos, '~g~[E]~w~ '..v.label)
-                if IsControlJustReleased(0, 38) then
+              if ESX.PlayerData.job then
+                if ESX.PlayerData.job.name ~= v.job then
+                  DrawText3D(v.pos, '~g~[E]~w~ '..v.label)
+                  if IsControlJustReleased(0, 38) then
                     SetDisplay(true, v.job, v.label)
+                  end
                 end
+              end
             end
           end
         end
@@ -43,8 +49,18 @@ end)
 RegisterNUICallback("send_form", function(data)
     SetDisplay(false)
     if data ~= nil then
-      sendForm(data)
-      ESX.ShowNotification('~g~Your form has been sent to - '..data.job)
+      local wayjocLength = string.len(data.wayjoc)
+      local tuabyLength = string.len(data.tuaby)
+      if (wayjocLength < minLength) or (tuabyLength < minLength) then
+        ESX.ShowNotification('~r~Your form is too short - '..minLength..' min. characters!')
+      else
+        if (wayjocLength > maxLength) or (tuabyLength > maxLength) then
+          ESX.ShowNotification('~r~Your form is too long - '..maxLength..' max. characters!')
+        else
+          sendForm(data)
+          ESX.ShowNotification('~g~Your form has been sent to - '..data.job)
+        end
+      end
     else
       ESX.ShowNotification('~r~Your form is empty!')
     end
@@ -57,27 +73,33 @@ RegisterNUICallback("exit_form", function(data)
     SetDisplay(false)
 end)
 
-
 function SetDisplay(bool, form_job, form_label)
     display = bool
     SetNuiFocus(bool, bool)
+    local firstname, lastname, phone
     ESX.TriggerServerCallback('strin_jobform:getInfo', function(info)
-      SendNUIMessage({
+      firstname = info.firstname
+      lastname = info.lastname
+      phone = info.phone
+    end)
+    while phone == nil do
+      Citizen.Wait(100)
+    end
+    SendNUIMessage({
         type = "ui",
         status = bool,
         job = form_job,
         label = form_label,
         player = {
-          firstname = info.firstname,
-          lastname = info.lastname,
-          phone = info.phone
+          firstname = firstname,
+          lastname = lastname,
+          phone = phone
         }
     })
-    end)
 end
 
 function sendForm(data)
-  TriggerServerEvent('strin_jobform:sendWebhook', GetPlayerServerId(), data)
+  TriggerServerEvent('strin_jobform:sendWebhook', GetPlayerServerId(PlayerId()), data)
 end
 
 function DrawText3D(coords, text)
@@ -85,7 +107,7 @@ function DrawText3D(coords, text)
   local px,py,pz=table.unpack(GetGameplayCamCoords())
   
   SetTextScale(0.5, 0.35)
-  SetTextFont(4)
+  SetTextFont(0)
   SetTextProportional(1)
   SetTextColour(255, 255, 255, 215)
   SetTextEntry("STRING")
