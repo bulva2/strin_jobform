@@ -21,15 +21,15 @@ function getInfo(source)
 	end
 end
 
-ESX.RegisterServerCallback('strin_jobform:getInfo', function(source,cb) 
-    info = getInfo(source)
-    cb(info)
+ESX.RegisterServerCallback('strin_jobform:getInfo', function(source, cb) 
+    	local info = getInfo(source)
+    	cb(info)
 end)
 
 RegisterServerEvent('strin_jobform:sendWebhook')
 AddEventHandler('strin_jobform:sendWebhook', function(source, data)
 	local job = data.job
-	info = getInfo(source)
+	local info = getInfo(source)
 	local headers = {
 		['Content-Type'] = 'application/json'
 	}
