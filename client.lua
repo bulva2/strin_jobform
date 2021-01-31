@@ -22,26 +22,38 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
   ESX.PlayerData = xPlayer
 end)
 
+RegisterNetEvent('esx:setJob')
+AddEventHandler('esx:setJob', function(job)
+  ESX.PlayerData.job = job
+end)
+
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0)
-        ped = GetPlayerPed(-1)
-        coords = GetEntityCoords(ped)
+        local ped = GetPlayerPed(-1)
+        local coords = GetEntityCoords(ped)
+        local distanceToForm = 30000
 
         for k, v in pairs(Config.Forms) do
           local distance = #(coords - v.pos)
+          if distance < distanceToForm then
+            distanceToForm = distance
+          end
           if not display then
             if distance < 1.0 then
               if ESX.PlayerData.job then
-                if ESX.PlayerData.job.name ~= v.job then
+                if ESX.PlayerData.job.name ~= k then
                   DrawText3D(v.pos, '~g~[E]~w~ '..v.label)
                   if IsControlJustReleased(0, 38) then
-                    SetDisplay(true, v.job, v.label)
+                    SetDisplay(true, k, v.label)
                   end
                 end
               end
             end
           end
+        end
+        if distanceToForm > Config.LoadDistance then
+          Citizen.Wait(2000)
         end
     end
 end)
@@ -78,9 +90,9 @@ function SetDisplay(bool, form_job, form_label)
     SetNuiFocus(bool, bool)
     local firstname, lastname, phone
     ESX.TriggerServerCallback('strin_jobform:getInfo', function(info)
-      firstname = info.firstname
-      lastname = info.lastname
-      phone = info.phone
+      firstname = info["firstname"]
+      lastname = info["lastname"]
+      phone = info["phone_number"]
     end)
     while phone == nil do
       Citizen.Wait(100)
@@ -104,16 +116,17 @@ end
 
 function DrawText3D(coords, text)
   local onScreen,_x,_y=World3dToScreen2d(coords.x,coords.y,coords.z)
-  local px,py,pz=table.unpack(GetGameplayCamCoords())
   
-  SetTextScale(0.5, 0.35)
-  SetTextFont(0)
+  SetTextScale(Config.DrawTextScale.x, Config.DrawTextScale.y)
+  SetTextFont(Config.DrawTextFont)
   SetTextProportional(1)
   SetTextColour(255, 255, 255, 215)
   SetTextEntry("STRING")
   SetTextCentre(1)
   AddTextComponentString(text)
   DrawText(_x,_y)
-  local factor = (string.len(text)) / 200
-  DrawRect(_x,_y+0.0105, 0.015+ factor, 0.035, 44, 44, 44, 100)
+  if Config.DrawRect then
+    local factor = (string.len(text)) / 200
+    DrawRect(_x,_y+0.0105, 0.015+ factor, 0.035, 44, 44, 44, 100)
+  end
 end
