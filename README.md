@@ -14,21 +14,18 @@ FiveM ESX Job Form Script
 
 #### (Client) Form Config:
 
-- mission_row = Class name for the form.
+- police = Job (name) for the form
 - pos = Position for 3d text to draw.
 - label = Label for the form (3D text + NUI)
-- job = Job (name) that will receive the form
 ```lua
 Config.Forms = {
-    mission_row = {
+    police = {
         pos = vector3(440.83834838867,-981.13397216797,30.689332962036),
-        label = 'LSPD Form',
-        job = 'police'
+        label = 'LSPD Form'
     },
-    pillbox_hospital = {
+    ambulance = {
         pos = vector3(298.89642333984,-584.50939941406,43.26086807251),
-        label = 'EMS Form',
-        job = 'ambulance'
+        label = 'EMS Form'
     }
 }
 ```
@@ -38,7 +35,7 @@ Config.Forms = {
 - police = 'webhook url'
 ```lua
 sConfig.Webhooks = {
-    police = '',
+    	police = '',
 	ambulance = ''
 }
 ```
