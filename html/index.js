@@ -48,6 +48,7 @@ $(function () {
             wayjoc: text1,
             tuaby: text2,
             job: item.job,
+            label: item.label,
         }));
         return;
     });
