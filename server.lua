@@ -9,35 +9,30 @@ function getInfo(source)
 	if result[1] ~= nil then
 		local info = result[1]
 
-		return {
-			firstname = info['firstname'],
-			lastname = info['lastname'],
-			dateofbirth = info['dateofbirth'],
-			sex = info['sex'],
-            phone = info['phone_number']
-		}
+		return info
 	else
 		return nil
 	end
 end
 
 ESX.RegisterServerCallback('strin_jobform:getInfo', function(source, cb) 
-    	local info = getInfo(source)
-    	cb(info)
+	local info = getInfo(source)
+    cb(info)
 end)
 
 RegisterServerEvent('strin_jobform:sendWebhook')
 AddEventHandler('strin_jobform:sendWebhook', function(source, data)
 	local job = data.job
+	local label = data.label
 	local info = getInfo(source)
 	local headers = {
 		['Content-Type'] = 'application/json'
 	}
 	local data = {
-		["username"] = 'Job Form',
+		["username"] = label,
 		["embeds"] = {{
 		  	["color"] = 3447003,
-		  	['description'] = '📝**Person Information**📝\nFirstname: '..info.firstname..'\nLastname: '..info.lastname..'\nDate of Birth: '..info.dateofbirth..'\nGender: '..info.sex..'\nPhone Number: '..info.phone..'\n \nWhy are you joining our company?\n'..data.wayjoc..'\n \nTell us about yourself\n'..data.tuaby,
+		  	['description'] = '📝**Person Information**📝\nFirstname: '..info['firstname']..'\nLastname: '..info['lastname']..'\nDate of Birth: '..info['dateofbirth']..'\nGender: '..info['sex']..'\nPhone Number: '..info['phone_number']..'\n \nWhy are you joining our company?\n'..data.wayjoc..'\n \nTell us about yourself\n'..data.tuaby,
 		  	["footer"] = {
 			  	["text"] = GetPlayerName(source)
 		  	}
