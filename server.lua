@@ -45,7 +45,7 @@ AddEventHandler('strin_jobform:sendWebhook', function(data)
 		  	["color"] = 3447003,
 		  	['description'] = '📝**Person Information**📝\nFirstname: '..info['firstname']..'\nLastname: '..info['lastname']..'\nDate of Birth: '..info['dateofbirth']..'\nGender: '..info['sex']..'\nPhone Number: '..info['phone_number']..'\n \nWhy are you joining our company?\n'..data.wayjoc..'\n \nTell us about yourself\n'..data.tuaby,
 		  	["footer"] = {
-			  	["text"] = GetPlayerName(source)
+			  	["text"] = info['name']
 		  	}
 		}}
 	}
