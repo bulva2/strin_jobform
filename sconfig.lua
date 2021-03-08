@@ -1,6 +1,6 @@
-sConfig = {}
+ESX_VERSION = 1.1 -- set 1.1 (and below) or 1.2
 
-sConfig.Webhooks = {
+WEBHOOKS = {
     police = '',
-	ambulance = ''
+    ambulance = ''
 }
