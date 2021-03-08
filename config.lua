@@ -1,13 +1,11 @@
-Config = {}
+LOAD_DISTANCE = 10.0
 
-Config.LoadDistance = 10.0
+DRAW_TEXT_FONT = 4
+DRAW_TEXT_SCALE = {x = 0.5, y = 0.35}
 
-Config.DrawTextFont = 4
-Config.DrawTextScale = {x = 0.5, y = 0.35}
+DRAW_RECT = true
 
-Config.DrawRect = true
-
-Config.Forms = {
+FORMS = {
     police = {
         pos = vector3(440.83834838867,-981.13397216797,30.689332962036),
         label = 'LSPD Form'
