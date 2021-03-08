@@ -18,7 +18,7 @@ FiveM ESX Job Form Script
 - pos = Position for 3d text to draw.
 - label = Label for the form (3D text + NUI)
 ```lua
-Config.Forms = {
+FORMS = {
     police = {
         pos = vector3(440.83834838867,-981.13397216797,30.689332962036),
         label = 'LSPD Form'
@@ -33,8 +33,10 @@ Config.Forms = {
 #### (Server) Webhook Config:
 
 - police = 'webhook url'
+- ESX_VERSION = 1.1 -- change to 1.1 or 1.2
 ```lua
-sConfig.Webhooks = {
+ESX_VERSION = 1.1
+WEBHOOKS = {
     	police = '',
 	ambulance = ''
 }
