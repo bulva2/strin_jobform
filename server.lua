@@ -4,7 +4,7 @@ TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 function getInfo(source)
 
-	local identifier = GetPlayerIdentifiers(source)[1]
+	local identifier = getPlayersIdentifier(source)
 	local result = MySQL.Sync.fetchAll("SELECT * FROM users WHERE identifier = @identifier", {['@identifier'] = identifier})
 	if result[1] ~= nil then
 		local info = result[1]
@@ -15,13 +15,24 @@ function getInfo(source)
 	end
 end
 
+function getPlayersIdentifier(id)
+	if ESX_VERSION >= 1.2 then
+		local identifier = GetPlayerIdentifiers(id)[2]
+		local cutIdentifier = string.gsub(identifier, "license:", "")
+		return cutIdentifier
+	else
+		local identifier = GetPlayerIdentifiers(id)[1]
+		return identifier
+	end
+end
+
 ESX.RegisterServerCallback('strin_jobform:getInfo', function(source, cb) 
 	local info = getInfo(source)
     cb(info)
 end)
 
 RegisterServerEvent('strin_jobform:sendWebhook')
-AddEventHandler('strin_jobform:sendWebhook', function(source, data)
+AddEventHandler('strin_jobform:sendWebhook', function(data)
 	local job = data.job
 	local label = data.label
 	local info = getInfo(source)
@@ -38,5 +49,5 @@ AddEventHandler('strin_jobform:sendWebhook', function(source, data)
 		  	}
 		}}
 	}
-	PerformHttpRequest(sConfig.Webhooks[job], function(err, text, headers) end, 'POST', json.encode(data), headers)
+	PerformHttpRequest(WEBHOOKS[job], function(err, text, headers) end, 'POST', json.encode(data), headers)
 end)
