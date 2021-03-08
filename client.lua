@@ -34,7 +34,7 @@ Citizen.CreateThread(function()
         local coords = GetEntityCoords(ped)
         local distanceToForm = 30000
 
-        for k, v in pairs(Config.Forms) do
+        for k, v in pairs(FORMS) do
           local distance = #(coords - v.pos)
           if distance < distanceToForm then
             distanceToForm = distance
@@ -52,7 +52,7 @@ Citizen.CreateThread(function()
             end
           end
         end
-        if distanceToForm > Config.LoadDistance then
+        if distanceToForm > LOAD_DISTANCE then
           Citizen.Wait(2000)
         end
     end
@@ -111,21 +111,21 @@ function SetDisplay(bool, form_job, form_label)
 end
 
 function sendForm(data)
-  TriggerServerEvent('strin_jobform:sendWebhook', GetPlayerServerId(PlayerId()), data)
+  TriggerServerEvent('strin_jobform:sendWebhook', data)
 end
 
 function DrawText3D(coords, text)
   local onScreen,_x,_y=World3dToScreen2d(coords.x,coords.y,coords.z)
   
-  SetTextScale(Config.DrawTextScale.x, Config.DrawTextScale.y)
-  SetTextFont(Config.DrawTextFont)
+  SetTextScale(DRAW_TEXT_SCALE.x, DRAW_TEXT_SCALE.y)
+  SetTextFont(DRAW_TEXT_FONT)
   SetTextProportional(1)
   SetTextColour(255, 255, 255, 215)
   SetTextEntry("STRING")
   SetTextCentre(1)
   AddTextComponentString(text)
   DrawText(_x,_y)
-  if Config.DrawRect then
+  if DRAW_RECT then
     local factor = (string.len(text)) / 200
     DrawRect(_x,_y+0.0105, 0.015+ factor, 0.035, 44, 44, 44, 100)
   end
