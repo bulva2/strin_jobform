@@ -17,9 +17,16 @@ end
 
 function getPlayersIdentifier(id)
 	if ESX_VERSION >= 1.2 then
-		local identifier = GetPlayerIdentifiers(id)[2]
-		local cutIdentifier = string.gsub(identifier, "license:", "")
-		return cutIdentifier
+		local identifier = GetPlayerIdentifiers(id)[1]
+		local check = string.find(identifier, "license:")
+			if check == nil then
+				local identifier = GetPlayerIdentifiers(id)[2]
+				local cutIdentifier = string.gsub(identifier, "license:", "")
+				return cutIdentifier
+			else
+				local cutIdentifier = string.gsub(identifier, "license:", "")
+				return cutIdentifier
+			end
 	else
 		local identifier = GetPlayerIdentifiers(id)[1]
 		return identifier
